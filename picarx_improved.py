@@ -1,7 +1,12 @@
-
-from ezblock import *
-from ezblock import __reset_mcu__
-__reset_mcu__()
+import  time
+try:
+    from  ezblock  import *
+    from ezblock import __reset_mcu__
+    __reset_mcu__()
+    time.sleep (0.01)
+except  ImportError:
+    print ("This  computer  does  not  appear  to be a PiCar -X system(/opt/ezblock  is not  present). Shadowing  hardware  callswith  substitute  functions ")
+    from  sim_ezblock  import *
 import time
 import atexit
 import math
