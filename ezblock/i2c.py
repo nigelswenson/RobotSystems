@@ -1,5 +1,6 @@
 from .basic import _Basic_class
 from smbus import SMBus
+import time
 
 class I2C(_Basic_class):
     MASTER = 0
@@ -10,7 +11,7 @@ class I2C(_Basic_class):
         super().__init__()
         self._bus = 1
         self._smbus = SMBus(self._bus)
-
+        time.sleep(1)
     def _i2c_write_byte(self, addr, data):   # i2C 写系列函数
         self._debug("_i2c_write_byte: [0x{:02X}] [0x{:02X}]".format(addr, data))
         return self._smbus.write_byte(addr, data)
