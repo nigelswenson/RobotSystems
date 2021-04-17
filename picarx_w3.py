@@ -139,13 +139,6 @@ class picar_thing(): # i was pretty sure they weren't going to use 'thing' in th
     def set_camera_servo2_angle(self, value): # sets the other camera servo
         self.camera_servo_pin2.angle(-1 * (value+self.cam_cal_value_2))
     
-    def get_adc_value(self): # finds the values going to the ADC pins
-        adc_value_list = []
-        adc_value_list.append(self.S0.read())
-        adc_value_list.append(self.S1.read())
-        adc_value_list.append(self.S2.read())
-        return adc_value_list
-    
     def set_power(self, speed): # sets a speed to the motors
         self.set_motor_speed(1, speed)
         self.set_motor_speed(2, speed) 
@@ -255,6 +248,7 @@ class picar_thing(): # i was pretty sure they weren't going to use 'thing' in th
                 print('not valid maneuver')
                 flag=False
         self.stop()
+
 
 if __name__ == "__main__":
     new_car=picar_thing()
