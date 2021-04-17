@@ -144,16 +144,20 @@ class picar_thing(): # i was pretty sure they weren't going to use 'thing' in th
         self.set_motor_speed(2, speed) 
     
     def adjust_speed(self, speed,angle): # tweaks the speed of the motors to turn more smoothly
-        r=math.tan(angle/180*math.pi)/4+2.3
+        r=math.tan((angle+90)/180*math.pi)/4+2.3
+        print('radius')
+        print(str(r))
         return [speed*r/(r-2.3),speed*r/(r+2.3)]
     
     def backward(self, speed=40,angle=0): # moves the car backwards at a given speed and angle
-        speeds=self.adjust_speed(speed,angle)
+        #speeds=self.adjust_speed(speed,angle)
+        speeds=[speed,speed]
         self.set_motor_speed(1, speeds[0])
         self.set_motor_speed(2, speeds[1])
     
     def forward(self, speed=40,angle=0): # moves the car forwards at a given speed and angle
-        speeds=self.adjust_speed(speed,angle)
+        #speeds=self.adjust_speed(speed,angle)
+        speeds=[speed,speed]
         self.set_motor_speed(1, -1*speeds[0])
         self.set_motor_speed(2, -1*speeds[1])
     

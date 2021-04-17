@@ -27,13 +27,15 @@ class sensor():
         adc_value_list.append(self.S0.read())
         adc_value_list.append(self.S1.read())
         adc_value_list.append(self.S2.read())
+        #print('sensor values')
+        print(str(adc_value_list))
         return adc_value_list
     
 class interpreter():
-    def __init__(self,sensitivity=0.5,polarity=1):
-        if type(sensitivity) is not float:
-            print('sensitivity should be a float, using 0.5')
-            self.sensitivity=0.5
+    def __init__(self,sensitivity =100 ,polarity=1):
+        if type(sensitivity) is not int:
+            print('sensitivity should be an int, using 200')
+            self.sensitivity=100
         else:
             self.sensitivity=sensitivity
         #polarity = 1 means line is brighter than backdrop, -1 means opposite
@@ -63,13 +65,14 @@ class interpreter():
         return pos
         
 class controller():
-    def __init__(self,scaling_factor=1):
-        self.scaling_factor = 1
+    def __init__(self,scaling_factor=40):
+        self.scaling_factor = scaling_factor
         self.car = picar_thing()
         
     def controll_car(self,pos):
-        self.car.forward(20,pos*self.scaling_factor)
-        time.sleep(0.2)
+        self.car.set_dir_servo_angle(pos*self.scaling_factor)
+        self.car.forward(15,pos*self.scaling_factor)
+        time.sleep(0.1)
         
 def follow_line(*args):
     if len(args)==3:   
@@ -84,3 +87,5 @@ def follow_line(*args):
         brightness=car_sensor.get_adc_value()
         pose=car_interpret.process(brightness)
         car_controll.controll_car(pose)
+
+follow_line()
