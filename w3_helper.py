@@ -37,8 +37,6 @@ class sensor():
         adc_value_list.append(self.S0.read())
         adc_value_list.append(self.S1.read())
         adc_value_list.append(self.S2.read())
-        #print('sensor values')
-        print(str(adc_value_list))
         return adc_value_list
     
 class interpreter():
@@ -61,16 +59,12 @@ class interpreter():
             self.past_values.pop(0)
         pos=0
         if (self.polarity*(sensor_value[1]-sensor_value[0]))>self.sensitivity:
-            print('minor edge on left side')
             pos=-0.5
         elif (self.polarity*(sensor_value[1]-sensor_value[2]))>self.sensitivity:
-            print('minor edge on right side')
             pos=0.5
         elif (self.polarity*(sensor_value[1]-sensor_value[0]))>self.sensitivity:
-            print('major edge on left side')
             pos=-1
         elif (self.polarity*(sensor_value[1]-sensor_value[2]))>self.sensitivity:
-            print('major edge on right side')
             pos=1
         return pos
         
