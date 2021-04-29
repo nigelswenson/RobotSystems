@@ -10,7 +10,7 @@ import numpy as np
 import cv2
 import logging
 
-frame = cv2.imread('/home/nigel/test_cv_code.jpeg')
+#frame = cv2.imread('/home/nigel/test_cv_code.jpeg')
 def detect_edges(frame):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     #cv2.imshow('window',hsv)
@@ -133,14 +133,14 @@ def calculate_heading(lane_line,frame_width,frame_height):
     angle=np.arctan((middle-line[2])/(frame_height-line[3]))
     return angle,[[[middle,frame_height,line[2],line[3]]]]
                    
-lane_lines=detect_lane(frame)
-lane_lines_image = display_lines(frame, lane_lines)
-cv2.imshow("lane lines", lane_lines_image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-frame_shape=frame.shape
-angle,lines=calculate_heading(lane_lines,frame_shape[1],frame_shape[0])
-lane_lines_image = display_lines(frame,lines)
-cv2.imshow("lane lines", lane_lines_image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+#lane_lines=detect_lane(frame)
+#lane_lines_image = display_lines(frame, lane_lines)
+#cv2.imshow("lane lines", lane_lines_image)
+#cv2.waitKey(0)
+#cv2.destroyAllWindows()
+#frame_shape=frame.shape
+#angle,lines=calculate_heading(lane_lines,frame_shape[1],frame_shape[0])
+#lane_lines_image = display_lines(frame,lines)
+#cv2.imshow("lane lines", lane_lines_image)
+#cv2.waitKey(0)
+#cv2.destroyAllWindows()

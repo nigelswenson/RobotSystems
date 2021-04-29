@@ -16,6 +16,16 @@ except  ImportError:
     print ("This  computer  does  not  appear  to be a PiCar -X system(/opt/ezblock  is not  present). Shadowing  hardware  calls with  substitute  functions ")
     from  sim_ezblock  import *
 from picarx_w3 import picar_thing
+from picar_opencv import *
+import sys
+sys.path.append(r'/opt/ezblock')
+from vilib import Vilib
+
+Vilib.camera_start(True)
+#Vilib.color_detect_switch(True)
+#Vilib.detect_color_name('red')
+cap=cv2.VideoCapture(0)
+
 class sensor():
     def __init__(self):
         self.S0 = ADC('A0')
@@ -74,6 +84,14 @@ class controller():
         self.car.forward(15,pos*self.scaling_factor)
         time.sleep(0.1)
         
+    def camera_control(self,frame):
+        lane_lines=detect_lane(frame)
+        frame_shape=frame.shape
+        angle,lines = calculate_heading(lane_lines,frame_shape[1],frame_shape[0])
+        self.car.set_dir_servo_angle(angle)
+        self.car.forward(15,angle)
+        time.sleep(0.1)
+
 def follow_line(*args):
     if len(args)==3:   
         car_sensor=sensor()
@@ -84,8 +102,10 @@ def follow_line(*args):
         car_interpret=interpreter()
         car_controll=controller()
     while True:
-        brightness=car_sensor.get_adc_value()
-        pose=car_interpret.process(brightness)
-        car_controll.controll_car(pose)
+        ret,frame=cap.read()
+        car_controll.camera_control(frame)
+        #brightness=car_sensor.get_adc_value()
+        #pose=car_interpret.process(brightness)
+        #car_controll.controll_car(pose)
 
 follow_line()

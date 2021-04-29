@@ -20,10 +20,20 @@ import time
 import atexit
 import math
 import logging
+#import sys
+#from picar_opencv import *
+#sys.path.append(r'/opt/ezblock')
+#from vilib import Vilib, get_frame
+#from ezblock import WiFi
+
+#Vilib.camera_start(True)
+#Vilib.color_detect_switch(True)
+#Vilib.detect_color_name('red')
 #from logdecorator import log_on_start, log_on_end, log_on_error
 logging_format = '%(asctime)s: %(message)s'
 logging.basicConfig(format=logging_format, level=logging.INFO, datefmt='%H:%M:%S')
 logging.getLogger().setLevel(logging.DEBUG)
+
 '''
 PERIOD = 4095
 PRESCALER = 10
