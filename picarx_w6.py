@@ -66,8 +66,7 @@ class interpreter():
         
         self.delay_time=delay_time
         
-    def process(self,sensor_value_bus,):
-        sensor_value=sensor_value_bus.read()
+    def process(self,sensor_value):
         pos = 0
 
         if (self.polarity*(sensor_value[1] - sensor_value[0])) > self.sensitivity:
@@ -109,9 +108,11 @@ def follow_line(*args):
         car_interpret = interpreter()
         car_controll = controller()
     #print(car_sensor.get_adc_value)
-    sensing=Producer(car_sensor.get_adc_value,default_input_bus,name='sensor',delay=0.1)
-    interpreting=ConsumerProducer(car_interpret.process,name='interpreter',delay=0.1)
-    controlling=Consumer(car_controll.controll_car,default_output_bus,name='controller',delay=0.1)
+    adc_bus=Bus([0,0,0],name='adc_bus')
+    control_bus=Bus(0,name='control_bus')
+    sensing=Producer(car_sensor.get_adc_value,adc_bus,name='sensor',delay=0.1)
+    interpreting=ConsumerProducer(car_interpret.process,input_busses=adc_bus,output_busses=control_bus,name='interpreter',delay=0.1)
+    controlling=Consumer(car_controll.controll_car,control_bus,name='controller',delay=0.1)
     
     '''
     with concurrent.futures.ThreadPoolExecutor(max_workers = 4) as executor:

@@ -98,10 +98,10 @@ class ConsumerProducer:
 
             # Collect all of the values from the input busses into a list
             input_values = self.collectBussesToValues(self.input_busses)
-
+            #print('these are the input values to', self.name, input_values)
             # Get the output value or tuple of values corresponding to the inputs
             output_values = self.consumer_producer_function(*input_values)
-
+            #print('these are the output values from', self.name, output_values)
             # Deal the values into the output busses
             self.dealValuesToBusses(output_values, self.output_busses)
 
