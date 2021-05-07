@@ -136,7 +136,7 @@ def follow_line(*args):
     t3.start()
     
     
-    time.sleep(1)
+    time.sleep(20)
 
 stop_threads = False
 follow_line()
