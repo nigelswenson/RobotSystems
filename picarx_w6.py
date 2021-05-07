@@ -50,7 +50,7 @@ class sensor():
     
 class interpreter():
 
-    def __init__(self, sensitivity = 100, polarity = 1,delay_time=0.5):
+    def __init__(self, sensitivity = 100, polarity = 1, delay_time=0.5):
 
         if type(sensitivity) is not int:
             print('sensitivity should be an int, using 200')
@@ -88,14 +88,46 @@ class controller():
         self.scaling_factor = scaling_factor
         self.car = picar_thing()
         self.delay_time = delay_time
-    def controll_car(self, pos):
+    def controll_car(self, pos, usonic=100):
         
-        self.car.set_dir_servo_angle(pos*self.scaling_factor)
-        self.car.forward(15, pos*self.scaling_factor)
+        if usonic <= 10:
+            self.car.stop()
+        else:
+            self.car.set_dir_servo_angle(pos*self.scaling_factor)
+            self.car.forward(15, pos*self.scaling_factor)
         
         time.sleep(self.delay_time)
 
 
+class ultrasonic():
+    
+    def __init__(self):
+        self.trig = Pin('D8')
+        self.echo = Pin('D9')
+        
+    def Get_distance(self): # who knows
+        timeout=0.01
+    
+        self.trig.low()
+        time.sleep(0.01)
+        self.trig.high()
+        time.sleep(0.000015)
+        self.trig.low()
+        pulse_end = 0
+        pulse_start = 0
+        timeout_start = time.time()
+        while self.echo.value()==0:
+            pulse_start = time.time()
+            if pulse_start - timeout_start > timeout:
+                return -1
+        while self.echo.value()==1:
+            pulse_end = time.time()
+            if pulse_end - timeout_start > timeout:
+                return -2
+        during = pulse_end - pulse_start
+        cm = round(during * 340 / 2 * 100, 2)
+        #print(cm)
+        return cm
     
 def follow_line(*args):
     global stop_threads
@@ -103,17 +135,20 @@ def follow_line(*args):
         car_sensor = sensor()
         car_interpret = interpreter(args[0], args[1])
         car_controll = controller(args[2])
+        car_ultrasonic = ultrasonic()
     else:
         car_sensor = sensor()
         car_interpret = interpreter()
         car_controll = controller()
+        car_ultrasonic = ultrasonic()
     #print(car_sensor.get_adc_value)
     adc_bus=Bus([0,0,0],name='adc_bus')
     control_bus=Bus(0,name='control_bus')
+    distance_bus=Bus(0,name='ultrasonic_bus')
     sensing=Producer(car_sensor.get_adc_value,adc_bus,name='sensor',delay=0.1)
     interpreting=ConsumerProducer(car_interpret.process,input_busses=adc_bus,output_busses=control_bus,name='interpreter',delay=0.1)
-    controlling=Consumer(car_controll.controll_car,control_bus,name='controller',delay=0.1)
-    
+    controlling=Consumer(car_controll.controll_car,input_busses=(control_bus,distance_bus),name='controller',delay=0.1)
+    distance=Producer(car_ultrasonic.Get_distance,distance_bus,name='ultrasonic',delay=0.1)
     '''
     with concurrent.futures.ThreadPoolExecutor(max_workers = 4) as executor:
         eSensor = executor.submit(sensing)
